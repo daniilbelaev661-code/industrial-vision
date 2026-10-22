@@ -1,0 +1,66 @@
+# Виртуальное окружение
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Модели — веса не кладём в Git
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.engine
+models/*.trt
+models/*.tflite
+
+# Данные и датасеты — только .gitkeep
+datasets/*
+!datasets/.gitkeep
+data/*
+!data/.gitkeep
+
+# События и логи (генерируются в runtime)
+events/*
+logs/*
+!events/.gitkeep
+!logs/.gitkeep
+
+# Видео и медиа
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.webm
+
+# Секреты
+.env
+configs/local.yaml
+configs/*.secret.yaml
+
+# IDE / редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ОС
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Временные файлы
+*.tmp
+*.bak
+*.log
+!logs/*.log
