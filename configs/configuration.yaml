@@ -1,0 +1,38 @@
+camera:
+  id: cam_01
+  source: "${CAMERA_SOURCE:-0}"
+  reconnect_sec: 2.0
+  read_timeout_sec: 5.0
+
+models:
+  detector_path: "models/detector.pt"
+  person_confidence: 0.50
+  vehicle_confidence: 0.50
+  fire_confidence: 0.65
+  smoke_confidence: 0.60
+
+zones:
+  restricted_01:
+    polygon:
+      - [0.10, 0.40]
+      - [0.90, 0.40]
+      - [0.90, 0.95]
+      - [0.10, 0.95]
+
+events:
+  temporal_confirmation:
+    n: 3
+    m: 5
+  cooldown_sec: 10
+  evidence_dir: "events"
+  snapshot_format: "jpg"
+
+logging:
+  dir: "logs"
+  level: "INFO"
+  max_bytes: 5000000
+  backup_count: 5
+
+api:
+  host: "0.0.0.0"
+  port: 8000
