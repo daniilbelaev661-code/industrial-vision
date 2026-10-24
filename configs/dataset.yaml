@@ -1,0 +1,16 @@
+path: datasets/ppe
+train: train/images
+val: valid/images
+test: test/images
+
+names:
+  0: boots
+  1: gloves
+  2: goggles
+  3: helmet
+  4: no-boots
+  5: no-gloves
+  6: no-goggles
+  7: no-helmet
+  8: no-vest
+  9: vest
