@@ -5,12 +5,13 @@ camera:
   read_timeout_sec: 5.0
 
 models:
-  detector_path: "models/detector.pt"
+  detector_path: "models/yolov8n.pt"   # Базовая модель для людей
+  ppe_detector_path: "models/ppe_detector.pt" # Модель СИЗ
+  fire_smoke_detector_path: "models/smoke_fire_detector.pt" # Новая модель
   person_confidence: 0.50
   vehicle_confidence: 0.50
-  fire_confidence: 0.65
+  fire_confidence: 0.60
   smoke_confidence: 0.60
-
 zones:
   restricted_01:
     polygon:
