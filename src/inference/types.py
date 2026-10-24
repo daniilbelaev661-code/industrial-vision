@@ -14,6 +14,7 @@ class Detection:
     y1: int
     x2: int
     y2: int
+    track_id: int | None = None 
 
     @property
     def bbox(self) -> tuple[int, int, int, int]:
