@@ -1,6 +1,7 @@
 """Движок событий: анализ детекций и генерация событий."""
 from __future__ import annotations
 
+from uuid import uuid4
 import logging
 import time
 from dataclasses import dataclass
@@ -20,6 +21,13 @@ class Event:
     camera_id: str
     track_id: int | None
     confidence: float
+    event_id: str = None
+    snapshot: str | None = None
+    status: str = "new"
+
+    def __post_init__(self):
+        if self.event_id is None:
+            self.event_id = str(uuid4())
 
 class EventEngine:
     def __init__(self, config: dict):
