@@ -78,3 +78,4 @@ logs/
 # Разрешаем демонстрационные видео
 !data/test_smoke.mp4
 !data/test_fire.mp4
+!data/test.mp4
