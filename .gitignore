@@ -17,9 +17,8 @@ htmlcov/
 .ruff_cache/
 
 # Модели — веса не кладём в Git
-models/*.pt
 models/*.pth
-models/*.onnx
+models/*.pt
 models/*.engine
 models/*.trt
 models/*.tflite
@@ -64,3 +63,18 @@ desktop.ini
 *.bak
 *.log
 !logs/*.log
+
+# Сгенерированные файлы обучения и логи
+runs/
+weights/
+logs/
+
+# Разрешаем финальные модели
+!models/yolov8n.pt
+!models/ppe_detector.pt
+!models/smoke_fire_detector.pt
+!models/*.onnx
+
+# Разрешаем демонстрационные видео
+!data/test_smoke.mp4
+!data/test_fire.mp4

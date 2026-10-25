@@ -10,7 +10,7 @@ models:
   fire_smoke_detector_path: "models/smoke_fire_detector.pt" # Новая модель
   person_confidence: 0.50
   vehicle_confidence: 0.50
-  fire_confidence: 0.60
+  fire_confidence: 0.30
   smoke_confidence: 0.60
 zones:
   restricted_01:
