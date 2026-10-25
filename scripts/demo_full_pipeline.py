@@ -1,6 +1,6 @@
 """Полный пайплайн: Детекция + Логика + Сохранение JSON и Snapshot."""
 from __future__ import annotations
-
+from src.capture.fps import FPSMeter
 import sys
 import time
 import cv2
@@ -31,6 +31,7 @@ def main() -> int:
     
     # 3. Инициализируем движки
     event_engine = EventEngine(config)
+    meter = FPSMeter(window=30)
     evidence_mgr = EvidenceManager(config["events"]["evidence_dir"], config["events"]["snapshot_format"])
     
     with VideoSource(VIDEO_PATH) as src:
@@ -39,6 +40,7 @@ def main() -> int:
 
         while True:
             t_start = time.perf_counter()
+            fps = meter.tick()
             try:
                 frame = src.read()
             except RuntimeError:
@@ -85,6 +87,8 @@ def main() -> int:
                 cv2.putText(frame, f"ALERT: {ev.event_type}", (20, 50),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
+            cv2.putText(frame, f"FPS: {fps:5.1f}", (20, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2, cv2.LINE_AA)
             cv2.imshow("Full Pipeline", frame)
 
             elapsed = time.perf_counter() - t_start

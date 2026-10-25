@@ -1,6 +1,6 @@
 """Демо: Трекинг + ROI + Генерация событий."""
 from __future__ import annotations
-
+from src.capture.fps import FPSMeter
 import time
 import cv2
 
@@ -18,13 +18,14 @@ def main() -> int:
     
     tracker = Tracker(MODEL_PATH, confidence=0.4)
     event_engine = EventEngine(config)
-    
+    meter = FPSMeter(window=30)
     with VideoSource(VIDEO_PATH) as src:
         native_fps = src._cap.get(cv2.CAP_PROP_FPS) or 25.0
         target_dt = 1.0 / native_fps
 
         while True:
             t_start = time.perf_counter()
+            fps = meter.tick() 
             try:
                 frame = src.read()
             except RuntimeError:
@@ -53,13 +54,15 @@ def main() -> int:
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
             # 5. Логика событий
-            events = event_engine.process_frame(detections, (h, w))
+            events = event_engine.process_frame(detections, [], [], (h, w))
             
             # Если есть события — выводим их на экран красным
             if events:
                 cv2.putText(frame, "ALERT: Person in zone!", (20, 50),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
 
+            cv2.putText(frame, f"FPS: {fps:5.1f}", (20, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2, cv2.LINE_AA)
             cv2.imshow("ROI Event Demo", frame)
 
             elapsed = time.perf_counter() - t_start

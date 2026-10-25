@@ -1,6 +1,6 @@
 """Демо: Детекция огня/дыма с замером задержки события"""
 from __future__ import annotations
-
+from src.capture.fps import FPSMeter
 import sys
 import time
 import cv2
@@ -16,6 +16,7 @@ def main() -> int:
     
     detector = Detector("models/smoke_fire_detector.pt", confidence=0.6)
     event_engine = EventEngine(config)
+    meter = FPSMeter(window=30)
     
     with VideoSource(VIDEO_PATH) as src:
         native_fps = src._cap.get(cv2.CAP_PROP_FPS) or 25.0
@@ -36,6 +37,7 @@ def main() -> int:
                 break
 
             frame_idx += 1
+            fps = meter.tick()
             h, w = frame.shape[:2]
             
             # 1. Детекция
@@ -77,6 +79,8 @@ def main() -> int:
                     print(f"[ЗАМЕР] Событие создано на кадре: {event_fire_frame}")
                     print(f"[ЗАМЕР] Задержка: {delay} кадров = {delay_sec:.2f} сек\n")
 
+            cv2.putText(frame, f"FPS: {fps:5.1f}", (20, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2, cv2.LINE_AA)
             cv2.imshow("Smoke/Fire Demo", frame)
 
             elapsed = time.perf_counter() - t_start

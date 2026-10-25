@@ -64,7 +64,7 @@ def main() -> int:
                             cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 255), 1)
 
             # 6. Логика событий
-            events = event_engine.process_frame(persons, ppes, (h, w))
+            events = event_engine.process_frame(persons, ppes, [], (h, w))
             
             # Вывод алертов на экран
             y_offset = 50
