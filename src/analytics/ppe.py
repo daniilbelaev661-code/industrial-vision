@@ -15,25 +15,54 @@ def is_inside(inner_bbox: tuple[int, int, int, int], outer_bbox: tuple[int, int,
     return ox1 <= cx <= ox2 and oy1 <= cy <= oy2
 
 
-def check_person_ppe(
+def check_person_ppe_crop(
     person: Detection, 
-    ppe_detections: list[Detection], 
+    ppe_detector, 
+    frame: np.ndarray,
     min_person_height: int = 120
-) -> dict[str, bool] | None:
-    """Проверяет наличие каски и жилета у человека.
-    
-    Возвращает словарь {'has_helmet': bool, 'has_vest': bool}.
-    Возвращает None, если человек слишком мал для анализа.
-    """
+) -> tuple[dict[str, bool], list[Detection]] | None:
     person_height = person.y2 - person.y1
     if person_height < min_person_height:
-        return None  # Объект слишком мал для надежной проверки
+        return None
 
-    # Ищем каски и жилеты, которые находятся в пределах рамки этого человека
-    helmets = [d for d in ppe_detections if d.class_name == "helmet" and is_inside(d.bbox, person.bbox)]
-    vests = [d for d in ppe_detections if d.class_name == "vest" and is_inside(d.bbox, person.bbox)]
+    h, w = frame.shape[:2]
+    
+    # УВЕЛИЧИВАЕМ ОТСТУПЫ: 50% сверху и снизу, 20% по бокам
+    padding_y = int(person_height * 0.5)
+    padding_x = int((person.x2 - person.x1) * 0.2)
 
-    return {
-        "has_helmet": len(helmets) > 0,
-        "has_vest": len(vests) > 0
+    x1 = max(0, person.x1 - padding_x)
+    y1 = max(0, person.y1 - padding_y)
+    x2 = min(w, person.x2 + padding_x)
+    y2 = min(h, person.y2 + padding_y)
+    
+    crop = frame[y1:y2, x1:x2]
+    if crop.size == 0:
+        return None
+
+    # Прогоняем кроп через модель
+    ppe_detections = ppe_detector.predict(crop)
+
+    # Пересчитываем координаты обратно на полный кадр
+    shifted_detections = []
+    for d in ppe_detections:
+        shifted_detections.append(Detection(
+            class_id=d.class_id,
+            class_name=d.class_name,
+            confidence=d.confidence,
+            x1=d.x1 + x1, y1=d.y1 + y1,
+            x2=d.x2 + x1, y2=d.y2 + y1
+        ))
+
+    has_helmet = any(d.class_name == "Hardhat" for d in ppe_detections)
+    has_vest = any(d.class_name == "Safety Vest" for d in ppe_detections)
+    
+    explicit_no_helmet = any(d.class_name == "NO-Hardhat" for d in ppe_detections)
+    explicit_no_vest = any(d.class_name == "NO-Safety Vest" for d in ppe_detections)
+
+    result = {
+        "has_helmet": has_helmet and not explicit_no_helmet,
+        "has_vest": has_vest and not explicit_no_vest
     }
+    
+    return result, shifted_detections

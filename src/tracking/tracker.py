@@ -23,7 +23,8 @@ class Tracker:
             frame,
             persist=True,
             conf=self.confidence,
-            tracker="bytetrack.yaml",
+            tracker="configs/custom_botsort.yaml",
+            imgsz=480,
             verbose=False
         )
         

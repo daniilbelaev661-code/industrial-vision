@@ -20,18 +20,18 @@ def main() -> int:
     print("Starting training on GPU (device=0)...")
     results = model.train(
         data=DATA_YAML,
-        epochs=150,             
-        imgsz=640,
-        batch=16,
+        epochs=150,     # Сколько раз модель просмотрит весь датасет         
+        imgsz=640,      # Размер картинки (в пикселях), к которому сжимается всё видео
+        batch=16,       # Сколько картинок обрабатывать за один шаг
         workers=4,
         device=0,
         project=PROJECT_DIR,
         name=RUN_NAME,
         exist_ok=True,
-        patience=20,            
+        patience=20,    # Если 20 эпох подряд метрики не растут — остановка       
         save=True,
         plots=True,
-        classes=[3, 9],         
+        classes=[3, 9], # Каски и желеты  
     )
 
     print("\n=== Training finished ===")

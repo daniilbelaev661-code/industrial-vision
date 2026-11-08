@@ -29,7 +29,8 @@ class Detector:
         """Запускает детекцию на кадре (BGR numpy array)."""
         results = self.model.predict(
             frame, 
-            conf=self.confidence, 
+            conf=self.confidence,
+            imgsz=480,
             verbose=False
         )
         

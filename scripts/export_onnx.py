@@ -8,8 +8,9 @@ from ultralytics import YOLO
 MODELS_DIR = Path("models")
 MODELS_TO_EXPORT = [
     "yolov8n.pt",
-    "ppe_detector.pt",
-    "smoke_fire_detector.pt"
+    "smoke_fire_detector.pt",
+    "ppe_v2.pt",           # <--- НОВАЯ
+    "spill_detector.pt",   # <--- НОВАЯ
 ]
 
 def main() -> int:
