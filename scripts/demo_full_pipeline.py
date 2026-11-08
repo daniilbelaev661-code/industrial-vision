@@ -130,9 +130,9 @@ def main() -> int:
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2, cv2.LINE_AA)
             cv2.imshow("Full Pipeline", frame)
 
-            elapsed = time.perf_counter() - t_start
-            if target_dt > elapsed:
-                time.sleep(target_dt - elapsed)
+            #elapsed = time.perf_counter() - t_start
+            #if target_dt > elapsed:
+            #    time.sleep(target_dt - elapsed)
 
             if (cv2.waitKey(1) & 0xFF) in (ord("q"), 27):
                 break
